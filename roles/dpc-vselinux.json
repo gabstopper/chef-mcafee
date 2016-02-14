@@ -1,0 +1,13 @@
+{
+   "name": "dpc-vselinux",
+   "default_attributes": {
+   },
+   "json_class": "Chef::Role",
+   "run_list": ["recipe[mcafee::vselinux]",
+	"recipe[mcafee::dpclinux]"
+   ],
+   "description": "",
+   "chef_type": "role",
+   "override_attributes": {
+   }
+}
