@@ -26,6 +26,7 @@ remote_file "/tmp/agentPackages.zip" do
   notifies :run, 'execute[unpack_MA]', :immediately
   notifies :run, 'execute[provide_exe_permission]', :immediately
   notifies :run, 'execute[install_mfe_agent]', :immediately
+  notifies :run, 'execute[contact_epo]', :immediately
 end
 
 #Unpack mcafee agent
@@ -43,6 +44,11 @@ end
 #Install McAfee Agent
 execute 'install_mfe_agent' do
   command "sudo ./install.sh -i"
+  action :nothing
+end
+
+execute 'contact_epo' do
+  command "sudo /opt/McAfee/cma/bin/cmdagent -P"
   action :nothing
 end
 
