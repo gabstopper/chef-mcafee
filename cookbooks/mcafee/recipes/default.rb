@@ -6,8 +6,4 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
-package 'unzip' do
-  action :install
-end
-
+Chef::Log.warn("Running default recipe")

@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: mcafee-linux-vse
-# Recipe:: default
+# Cookbook Name:: mcafee
+# Recipe:: dpclinux
 #
 # Copyright 2016, YOUR_COMPANY_NAME
 #
@@ -9,10 +9,13 @@
 
 include_recipe 'mcafee::mfeagent'
 
-if (::File.exists?( node['mcafee']['dpclinux'] ))
-  Chef::Log.warn("DPC Agent already installed, continuing on")
-  return
-end
+return if node.mcafee.is_installed.dpclinux
+#if node['mcafee']['is_installed']['dpclinux']
+#  Chef::Log.warn("Data Protection for Cloud already installed")
+#  return
+#end
+
+node.normal['mcafee']['is_installed']['dpclinux'] = true
 
 mcafee = data_bag_item("mcafee-databag", "data")
 

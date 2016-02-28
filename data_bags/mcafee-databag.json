@@ -2,6 +2,7 @@
   "id": "data",
   "epo_server": {
 	"fqdn": "epo.lepages.net",
+	"ip": "50.157.86.13",
 	"shortname": "epo"
   },
   "packages": {
