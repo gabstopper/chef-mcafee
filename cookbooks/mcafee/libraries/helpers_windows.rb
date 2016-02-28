@@ -30,7 +30,7 @@ module McafeeCookbook
       def run_install
 	case new_resource.name
         when 'agent'
-          install_winagent
+          install_agent
         when 'vse'
           install_vse
         when 'hips'
@@ -41,10 +41,6 @@ module McafeeCookbook
         end
       end
     
-      def install_vse2
-	Chef::Log.info("installing vse")
-      end
-
       def install_agent
 	Chef::Log.info "Going to install agent: #{new_resource.workdir}/#{node['mcafee']['agent']['package']}"
 	package 'McAfee Agent' do
@@ -67,15 +63,11 @@ module McafeeCookbook
 	end
       end
 	
-      def install_agent
-      end
-
       def install_vse
       end
 
       def install_dpc
       end     
-
     end
   end
 end

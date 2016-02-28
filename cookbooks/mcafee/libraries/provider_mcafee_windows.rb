@@ -29,7 +29,7 @@ class Chef
 	    end 
 	  end
 	  Chef::Log.info("Calling installer")
-	  install_agent
+	  run_install
         end
       else
 	Chef::Log.warn("Application already installed")
