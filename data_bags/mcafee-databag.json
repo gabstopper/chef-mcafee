@@ -5,21 +5,6 @@
 	"ip": "50.157.86.13",
 	"shortname": "epo"
   },
-  "packages": {
-  	"vse_package_name": "VSE 8.8.0 Build 1247 Package #1 (AAA-LICENSED-RELEASE-PATCH 4)",
-  	"vse_installer_name": "SetupVSE.Exe",
-  	"hips_package_name": "HIP_Client 8.0.0 Build 2919 Package #7 (AAA-LICENSED-RELEASE-PATCH 4)",
-  	"hips_installer_name": "McAfeeHIP_ClientSetup.exe",
-  	"vsel_package_name": "McAfeeVSEForLinux-2.0.2.29099-release.tar.gz",
-  	"vsel_installer_name": "McAfeeVSEForLinux-2.0.2.29099-installer",
-	"dpc_linux_installer": "MDPC1.0_Deployment_Linux.zip",
-	"dpc_windows_installer": "MDPC1.0_Deployment_Windows.zip"
-  },
-  "http": {
-  	"http_host": "https://s3-us-west-2.amazonaws.com/mcafee-deploy",
-  	"http_username": "admin",
-  	"http_password": "password"
-  },
   "uncpath": {
 	"unc_path": "\\\\ec2-10-10-10-10.ap-southeast-1.compute.amazonaws.com\\share",
   	"unc_path_linux": "//172.18.1.150/Users/Administrator/Desktop/share",

@@ -13,14 +13,26 @@
 #  action :remove
 #end
 
-mcafee 'agent' do
-  workdir "/tmp"
-  action :install
-end
+#mcafee 'agent' do
+#  workdir "/tmp"
+#  action :install
+#end
 
 mcafee 'vse' do
-  action :install
+  action :remove
 end
+
+mcafee 'dpc' do
+  action :remove
+end
+
+mcafee 'agent' do
+  action :remove
+end
+
+#mcafee 'vse' do
+#  action :install
+#end
 
 #---------------------------End of Recipe-----------------------------------
 

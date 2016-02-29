@@ -33,4 +33,9 @@ case node['platform_family']
       'installer' => 'SetupVSE.exe',
       'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\6B1D51EC6B91D4D4F834FCD5C23365FF)
     }
+    default['mcafee']['dpc'] = {
+      'package' => 'MDPC1.0_Deployment_Windows.zip',
+      'installer' => 'MDPCAgent.msi',
+      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\AC98CBF50DB092F4AA20D9945604D77C)
+    }
   end
