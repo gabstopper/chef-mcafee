@@ -32,12 +32,16 @@ class Chef
 	  run_install
         end
       else
-	Chef::Log.warn("Application already installed")
+	Chef::Log.warn("Application '#{new_resource.name}' already installed")
       end
     end
 
     action :remove do
-      Chef::Log.info("Called remove on windows")
+      if pkg_exists?(new_resource.name)
+        run_remove
+      else
+	Chef::Log.warn("Application '#{new_resource.name}' is not installed")
+      end
     end
 
     def load_current_resource

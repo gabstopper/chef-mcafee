@@ -25,10 +25,12 @@ case node['platform_family']
   when 'windows'
     default['mcafee']['agent'] = {
       'package' => 'FramePkg.exe',
-      'install_key' => %w(HKLM\\SYSTEM\\CurrentControlSet\\Services\\masvc)
+      'installer' => 'FramePkg.exe',
+      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\7BF432EAB6AE684439D9D0D24ACDEF72)
     }
     default['mcafee']['vse'] = {
-      'package' => 'rherg',
-      'install_key' => %w(duh)
+      'package' => 'VSE880LMLRP4.Zip',
+      'installer' => 'SetupVSE.exe',
+      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\6B1D51EC6B91D4D4F834FCD5C23365FF)
     }
   end

@@ -6,10 +6,19 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+#mcafee 'vse' do
+#  action :remove
+#end
+#mcafee 'agent' do
+#  action :remove
+#end
+
 mcafee 'agent' do
   workdir "/tmp"
-  #url "https://www.lepages.net"
-  #cookbook_file
+  action :install
+end
+
+mcafee 'vse' do
   action :install
 end
 
