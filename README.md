@@ -14,8 +14,8 @@ This repository contains several directories, and each directory contains a READ
 
 Requirements
 =============
-windows cookbook - https://github.com/opscode-cookbooks/windows
-chef_handler - https://github.com/opscode-cookbooks/chef_handler
+* `windows cookbook` - https://github.com/opscode-cookbooks/windows
+* `chef_handler` - https://github.com/opscode-cookbooks/chef_handler
 
 Platforms
 =============
