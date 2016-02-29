@@ -12,12 +12,17 @@ This repository contains several directories, and each directory contains a READ
 * `cookbooks/` - Sample cookbooks showing common examples
 * `data_bags/` - Store data bags and items in .json in the repository.
 
-Configuration
+Requirements
 =============
+windows cookbook - https://github.com/opscode-cookbooks/windows
+chef_handler - https://github.com/opscode-cookbooks/chef_handler
 
-The config file, `.chef/knife.rb` is a repository specific configuration file for knife. If you're using the Chef Platform, you can download one for your organization from the management console. If you're using the Open Source Chef Server, you can generate a new one with `knife configure`. For more information about configuring Knife, see the Knife documentation.
-
-https://docs.chef.io/knife.html
+Platforms
+=============
+See McAfee documentation for more information (www.mcafee.com)
+Ubuntu 
+RedHat
+Windows
 
 Next Steps
 ==========
