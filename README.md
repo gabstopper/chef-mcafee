@@ -1,4 +1,4 @@
-Mcafee cookbook
+McAfee cookbook
 ========
 
 This is a set of chef cookbook recipes for deployment of various McAfee endpoint software such as VirusScan, Host IPS, Host Firewall, McAfee Agent and Data Protection for Cloud.
