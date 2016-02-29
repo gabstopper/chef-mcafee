@@ -20,9 +20,10 @@ Requirements
 Platforms
 =============
 See McAfee documentation for more information (www.mcafee.com)
-Ubuntu 
-RedHat
-Windows
+* `Ubuntu` 
+* `RedHat`
+* `Windows`
+TODO: Specific versions
 
 Next Steps
 ==========
