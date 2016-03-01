@@ -23,6 +23,7 @@ See McAfee documentation for more information (www.mcafee.com)
 * `Ubuntu` 
 * `RedHat`
 * `Windows`
+* `Amazon Linux`
 TODO: Specific versions
 
 Next Steps
