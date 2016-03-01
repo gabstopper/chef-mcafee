@@ -26,9 +26,11 @@ TODO: Specific versions
 mcafee 'agent' do
   action :install
 end
+
 mcafee 'vse' do
   action :install
 end
+
 mcafee 'dpc' do
   action :install
 end
