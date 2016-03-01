@@ -1,5 +1,5 @@
 ####McAfee cookbook
-========
+===
 
 This is a set of chef cookbook recipes for deployment of various McAfee endpoint software such as VirusScan, Host IPS, Host Firewall, McAfee Agent and Data Protection for Cloud.
 It uses two providers to handle linux based platforms and windows based platforms. Based on the platform type, the correct provider will be used.
@@ -18,7 +18,6 @@ This repository contains several directories, and each directory contains a READ
 * `chef_handler` - https://github.com/opscode-cookbooks/chef_handler
 
 ####Platforms
-=============
 See McAfee documentation for more information (www.mcafee.com)
 * `Ubuntu` 
 * `RedHat`
