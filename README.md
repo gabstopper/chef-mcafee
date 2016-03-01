@@ -65,3 +65,5 @@ TODO: Document attributes
 
 * `uncpath` retrieve installation packages from uncpath **TODO
 
+Note: If url/cookbook_file or uncpath is not specified, the download and working directory will default to Chef::Config[:file_cache_path]. For windows: C:\chef\cache, for linux: /var/chef/cache
+
