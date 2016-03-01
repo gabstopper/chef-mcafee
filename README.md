@@ -67,7 +67,7 @@ TODO: Document attributes
 
 * `uncpath` retrieve installation packages from uncpath **TODO
 
-Note: If `url`, `cookbook_file` or `uncpath` are not specified, the required installer packages and files will come from the attributes/default.rb. 
+**Note**: If `url`, `cookbook_file` or `uncpath` are not specified, the required installer packages and files will come from the attributes/default.rb. 
 See 'attributes' section above for predefined attributes.
 
 If `workdir` is not specified, the working directory will default to Chef::Config[:file_cache_path]. For windows: C:\chef\cache, for linux: /var/chef/cache
