@@ -22,7 +22,7 @@ See McAfee documentation for more information (www.mcafee.com)
 TODO: Specific versions
 
 ####Recipes
-```
+```ruby
 mcafee 'agent' do
   action :install
 end
