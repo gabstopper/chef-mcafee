@@ -43,7 +43,11 @@ mcafee 'agent' do
   action :install
 end
 ```
-#####Attributes
+####Attributes
+
+TODO: Document attributes
+
+####Resources
 
 ######Actions
 :install - (default action) install software, the specific provider will manage installation when the host is windows vs linux
