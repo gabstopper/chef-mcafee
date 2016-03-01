@@ -50,18 +50,18 @@ TODO: Document attributes
 ####Resources
 
 ######Actions
-:install - (default action) install software, the specific provider will manage installation when the host is windows vs linux
+* `:install` (default action) install software, the specific provider will manage installation when the host is windows vs linux
 
-:remove - removes software, the specific provider will manage installation when the host is windows vs linux
+* `:remove` removes software, the specific provider will manage installation when the host is windows vs linux
 
 TODO: Document attributes
 
 ######Parameters
-workdir - where to extract installation files and store installers. If not specified, defaults to Chef cache dir
+* `workdir` where to extract installation files and store installers. If not specified, defaults to Chef cache dir
 
-url - specifies the URL to retrieve the required packages to install. Package names are defined in attributes/default.rb
+* `url` specifies the URL to retrieve the required packages to install. Package names are defined in attributes/default.rb
 
-cookbook_file - retrieve installation packages from cookbook_file **TODO
+* `cookbook_file` retrieve installation packages from cookbook_file **TODO
 
-uncpath - retrieve installation packages from uncpath **TODO
+* `uncpath` retrieve installation packages from uncpath **TODO
 
