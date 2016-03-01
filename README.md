@@ -21,7 +21,43 @@ See McAfee documentation for more information (www.mcafee.com)
 
 TODO: Specific versions
 
-Next Steps
-==========
+####Recipes
+```
+mcafee 'agent' do
+  action :install
+end
+mcafee 'vse' do
+  action :install
+end
+mcafee 'dpc' do
+  action :install
+end
 
-Read the README file in each of the subdirectories for more information about what goes in those directories.
+mcafee 'dpc' do
+  action :remove
+end
+
+mcafee 'agent' do
+  url s3.amazonaws.com/myrepository
+  workdir "/tmp"
+  action :install
+end
+```
+#####Attributes
+
+######Actions
+:install - (default action) install software, the specific provider will manage installation when the host is windows vs linux
+
+:remove - removes software, the specific provider will manage installation when the host is windows vs linux
+
+TODO: Document attributes
+
+######Parameters
+workdir - where to extract installation files and store installers. If not specified, defaults to Chef cache dir
+
+url - specifies the URL to retrieve the required packages to install. Package names are defined in attributes/default.rb
+
+cookbook_file - retrieve installation packages from cookbook_file **TODO
+
+uncpath - retrieve installation packages from uncpath **TODO
+
