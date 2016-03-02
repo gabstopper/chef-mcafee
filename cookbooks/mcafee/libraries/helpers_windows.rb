@@ -1,48 +1,48 @@
 module McafeeCookbook
   module Helpers
     module Windows
-      include Chef::Mixin::ShellOut
+      include Chef::Mixin::PowershellOut
 
       def pkg_exists?(pkg)
-	target = "#{node['mcafee'][pkg]['install_key'].first}"
-	Chef::Log.info("Target: #{target}")
         case pkg
 	when 'agent'
 	  begin
 	  registry_data_exists?(
-	  "#{target}", {
+	  node['mcafee']['agent']['install_key'].first, {
 	    :name => 'ProductName',
 	    :type => :string,
-	    :data => 'McAfee Agent' },
+	    :data => "McAfee Agent" },
 	    :machine )
 	  rescue
 	    false
 	  end
-	when 'vse'
-	  begin
-	  registry_data_exists?(
-	  "#{target}", {
-	    :name => 'ProductName',
-	    :type => :string,
-	    :data => 'McAfee VirusScan Enterprise' },
-	    :machine )
-	  rescue
-	    false
-	  end
-	when 'dpc'
-	  begin
-	  registry_data_exists?(
-	   "#{target}", {
-	     :name => 'ProductName',
-	     :type => :string,
-	     :data => 'McAfee Data Protection Agent' },
-	     :machine )
-	  rescue
-	    false
-	  end 
-	when 'hips'
-	  false
-	end  
+	else
+	  registry_lookup?
+	end
+      end
+
+      def registry_lookup?
+	Chef::Log.info("Checking for uninstall key #{node['mcafee'][new_resource.name]['install_key'].first}")
+        regkey =<<-EOF
+	  $path1 = 'Registry::HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
+	  $path2 = 'Registry::HKLU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
+	  $path3 = 'Registry::HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
+	  $path4 = 'Registry::HKLU\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
+	  $item = Get-ItemProperty -Path $path1, $path2, $path3, $path4 -ErrorAction SilentlyContinue |
+	  Where-Object {$_.DisplayName -like "#{node['mcafee'][new_resource.name]['install_key'].first}" }
+ 	  $x = $item | measure
+	  if ($x.count -gt 0) {
+	    Write-Host $item.pspath
+	  } else {
+	    Write-Host 'false'
+	  }
+	EOF
+	cmd = powershell_out(regkey)
+	if cmd.stdout =~ /false/
+	  return false
+	else
+	  Chef::Log.info("Registry key found: #{cmd.stdout}")
+	end
       end
 
       def run_install
@@ -100,17 +100,17 @@ module McafeeCookbook
 	    installer_type :custom
 	    options '/remove=agent /silent'
 	  end
-	when 'vse'	#KB52648 kc.mcafee.com, this assumes vse 8.8
+	when 'vse'
 	  #TODO consider reboot in event of reinstall
 	  package 'McAfee VirusScan Enterprise' do
-	    source "#{new_resource.workdir}/vse/vse880.msi"
+	    #Not specifying 'source' so all versions will be removed. Possibly add version to provider
 	    action :remove
 	    installer_type :msi
 	    options '/quiet'
 	  end
 	when 'dpc'
 	  package 'McAfee Data Protection Agent' do
-	    source "#{new_resource.workdir}/dpc/#{node['mcafee']['dpc']['installer']}"
+	    #source "#{new_resource.workdir}/dpc/#{node['mcafee']['dpc']['installer']}"
 	    action :remove
 	    installer_type :msi
 	    options '/quiet'

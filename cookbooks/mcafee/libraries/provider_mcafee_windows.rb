@@ -28,7 +28,7 @@ class Chef
 	      action :create_if_missing
 	    end 
 	  end
-	  Chef::Log.info("Calling installer")
+	  Chef::Log.info("Calling installer for #{new_resource.name}")
 	  run_install
         end
       else
@@ -38,6 +38,7 @@ class Chef
 
     action :remove do
       if pkg_exists?(new_resource.name)
+	Chef::Log.info("Calling uninstall for #{new_resource.name}")
         run_remove
       else
 	Chef::Log.warn("Application '#{new_resource.name}' is not installed")
