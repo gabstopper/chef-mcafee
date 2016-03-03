@@ -26,16 +26,18 @@ case node['platform_family']
     default['mcafee']['agent'] = {
       'package' => 'FramePkg.exe',
       'installer' => 'FramePkg.exe',
-      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\7BF432EAB6AE684439D9D0D24ACDEF72)
+      'install_key' => %w(McAfee\ Agent)
     }
     default['mcafee']['vse'] = {
       'package' => 'VSE880LMLRP4.Zip',
       'installer' => 'SetupVSE.exe',
-      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\6B1D51EC6B91D4D4F834FCD5C23365FF)
+      #'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\6B1D51EC6B91D4D4F834FCD5C23365FF)
+      'install_key' => %w(McAfee\ VirusScan\ Enterprise)
     }
     default['mcafee']['dpc'] = {
       'package' => 'MDPC1.0_Deployment_Windows.zip',
       'installer' => 'MDPCAgent.msi',
-      'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\AC98CBF50DB092F4AA20D9945604D77C)
+      #'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\AC98CBF50DB092F4AA20D9945604D77C)
+      'install_key' => %w(McAfee\ Data\ Protection\ Agent)
     }
   end
