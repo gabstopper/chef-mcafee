@@ -4,26 +4,18 @@ module McafeeCookbook
       include Chef::Mixin::PowershellOut
 
       def pkg_exists?(pkg)
-        case pkg
-	when 'agent'
-	  begin
-	  registry_data_exists?(
-	  node['mcafee']['agent']['install_key'].first, {
-	    :name => 'ProductName',
-	    :type => :string,
-	    :data => "McAfee Agent" },
-	    :machine )
-	  rescue
-	    false
-	  end
+	product = registry_lookup
+	if product.nil?
+	  false
 	else
-	  registry_lookup?
+	  Chef::Log.info(product)
+	  true
 	end
       end
 
-      def registry_lookup?
-	Chef::Log.info("Checking for uninstall key #{node['mcafee'][new_resource.name]['install_key'].first}")
-        regkey =<<-EOF
+      def registry_lookup
+	Chef::Log.info "Getting product info for #{node['mcafee'][new_resource.name]['install_key'].first}"
+        regquery =<<-EOF
 	  $path1 = 'Registry::HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
 	  $path2 = 'Registry::HKLU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
 	  $path3 = 'Registry::HKLM\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'
@@ -32,17 +24,23 @@ module McafeeCookbook
 	  Where-Object {$_.DisplayName -like "#{node['mcafee'][new_resource.name]['install_key'].first}" }
  	  $x = $item | measure
 	  if ($x.count -gt 0) {
-	    Write-Host $item.pspath
+	    $t = 'DisplayName={0},DisplayVersion={1},UninstallString={2}' -f $item.DisplayName, $item.DisplayVersion, $item.UninstallString
+	    Write-Host -NoNewLine $t
 	  } else {
 	    Write-Host 'false'
 	  }
 	EOF
-	cmd = powershell_out(regkey)
+	cmd = powershell_out(regquery)
 	if cmd.stdout =~ /false/
-	  return false
+	  return nil
 	else
-	  Chef::Log.info("Registry key found: #{cmd.stdout}")
+	  hash = {}
+	  cmd.stdout.split(',').each do |pair|
+  	    key,value = pair.split(/=/)
+  	    hash[key] = value
+	  end
 	end
+	return hash
       end
 
       def run_install
@@ -55,7 +53,7 @@ module McafeeCookbook
           install_dpc
 	when 'hips'
 	  #TODO
-          Chef::Log.info("Install hips")
+          Chef::Log.info "Install hips"
         end
       end
     
@@ -95,7 +93,7 @@ module McafeeCookbook
       def run_remove
 	case "#{new_resource.name}"
 	when 'agent'
-	  package 'McAfee Agent-override' do
+	  package 'McAfee Agent-ignore' do
 	    source "#{new_resource.workdir}/#{node['mcafee']['agent']['installer']}"
 	    installer_type :custom
 	    options '/remove=agent /silent'
@@ -103,18 +101,23 @@ module McafeeCookbook
 	when 'vse'
 	  #TODO consider reboot in event of reinstall
 	  package 'McAfee VirusScan Enterprise' do
-	    #Not specifying 'source' so all versions will be removed. Possibly add version to provider
 	    action :remove
 	    installer_type :msi
 	    options '/quiet'
 	  end
-	when 'dpc'
-	  package 'McAfee Data Protection Agent' do
-	    #source "#{new_resource.workdir}/dpc/#{node['mcafee']['dpc']['installer']}"
-	    action :remove
-	    installer_type :msi
-	    options '/quiet'
+	when 'dpc'	#CHEF-4928 - uninstall key is set to I and should be X (DPC 1.0.1)
+	  uninstall_key = registry_lookup
+          new_key = uninstall_key["UninstallString"].match(/({.*})/)[1]
+	  powershell_script 'McAfee Data Protection Agent' do
+  	    code <<-EOH
+	      msiexec /x '#{new_key}' /quiet /qn
+  	    EOH
 	  end
+	  #package 'McAfee Data Protection Agent' do
+	  #  action :remove
+	  #  installer_type :msi
+	  #  options '/quiet'
+	  #end
 	end
       end
     end
