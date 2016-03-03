@@ -10,6 +10,8 @@ class Chef
     end
 
     action :install do
+      #installed = installed_packages
+      #Chef::Log.info("installed::: #{installed}")
       unless pkg_exists?(new_resource.name)
         converge_by("Completed windows provider") do
 	  app_package = local_file(new_resource.name)
@@ -51,6 +53,8 @@ class Chef
         new_resource.workdir = "#{Chef::Config[:file_cache_path]}"
       end
       @current_resource.workdir = @new_resource.workdir
+
+      @current_resource	
     end 
 
     def package_name
