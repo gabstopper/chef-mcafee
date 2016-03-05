@@ -6,4 +6,4 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-Chef::Log.warn("Running default recipe")
+Chef::Log.info("Running default recipe")

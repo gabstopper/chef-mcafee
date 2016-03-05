@@ -1,4 +1,7 @@
-default['mcafee']['url'] = 'https://s3-us-west-2.amazonaws.com/mcafee-deploy/'
+default.mcafee.url = 'https://s3-us-west-2.amazonaws.com/mcafee-deploy/'
+default.mcafee.epo.agenthndlr.fqdn = 'www.lepages.net'
+default.mcafee.epo.agenthndlr.ip   = '50.12.23.11'
+default.mcafee.epo.agenthndlr.shortname = 'epo'
 
 case node['platform_family']
   when 'rhel', 'debian'
@@ -17,11 +20,6 @@ case node['platform_family']
       'installer' => 'install.sh',
       'install_key' => %w(mfecma mfert)
     }
-    default['mcafee']['hips'] = {
-      'package' => 'tht',
-      'installer' => 'erger',
-      'install_key' => 'testsr'
-    } 
   when 'windows'
     default['mcafee']['agent'] = {
       'package' => 'FramePkg.exe',
@@ -31,13 +29,11 @@ case node['platform_family']
     default['mcafee']['vse'] = {
       'package' => 'VSE880LMLRP4.Zip',
       'installer' => 'SetupVSE.exe',
-      #'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\6B1D51EC6B91D4D4F834FCD5C23365FF)
       'install_key' => %w(McAfee\ VirusScan\ Enterprise)
     }
     default['mcafee']['dpc'] = {
       'package' => 'MDPC1.0_Deployment_Windows.zip',
       'installer' => 'MDPCAgent.msi',
-      #'install_key' => %w(HKEY_CLASSES_ROOT\\Installer\\Products\\AC98CBF50DB092F4AA20D9945604D77C)
       'install_key' => %w(McAfee\ Data\ Protection\ Agent)
     }
   end

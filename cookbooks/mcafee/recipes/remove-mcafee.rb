@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe 'mcafee::eposerver'
+# Remove mcafee agent last
 
 mcafee 'agent' do
   workdir "/tmp"
@@ -18,15 +18,16 @@ mcafee 'agent' do
   #url s3.amazon.com
   #cookbook_file blah
   #uncpath \\share
-  action :install
+  action :nothing
 end
 
 mcafee 'vse' do
-  action :install
+  action :remove
 end
 
 mcafee 'dpc' do
-  action :install
+  action :remove
+  notifies :remove, 'mcafee[agent]', :immediately
 end
 
 #-------------------------End of Recipe-----------------------------------

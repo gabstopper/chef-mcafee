@@ -7,11 +7,12 @@ MA  (McAfee Agent)
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
 
-e.g.
 #### packages
-- `toaster` - mcafee needs toaster to brown your bagel.
+- windows cookbook - needed to support windows platform deployments
+- chef_handler - requirement of windows cookbook
+
+depends is set in metadata.rb
 
 Attributes
 ----------
