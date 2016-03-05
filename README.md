@@ -42,6 +42,11 @@ end
 mcafee 'agent' do
   url s3.amazonaws.com/myrepository
   workdir "/tmp"
+  product_info ({
+    :package => 'FramePkg.exe'
+    :installer => 'FramePkg.exe'
+    :install_key => %w(McAfee\ Agent)}
+  )
   action :install
 end
 ```
