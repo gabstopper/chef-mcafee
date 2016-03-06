@@ -1,7 +1,6 @@
 module McafeeCookbook
   module Helpers
 
-    #Chef::Log.info "Pathname: #{new_resource.workdir}/#{Pathname(new_resource.name).basename}"
     def download_pkgs
       if new_resource.url
         remote_file full_pkg_path do
@@ -21,19 +20,19 @@ module McafeeCookbook
     end
 
     def full_pkg_path(subdir = nil)
-      if subdir.nil?
-        "#{new_resource.workdir}/#{new_resource.product_info[:package]}"
-      else
-        "#{new_resource.workdir}/#{subdir}/#{new_resource.product_info[:package]}"
+      path = Pathname(new_resource.workdir) + new_resource.product_info[:package]
+      unless subdir.nil?
+	path = Pathname(new_resource.workdir) + subdir + new_resource_product_info[:installer]
       end	
+      path.to_s
     end
 
     def full_installer_path(subdir = nil)
-      if subdir.nil?
-        "#{new_resource.workdir}/#{new_resource.product_info[:installer]}"
-      else
-        "#{new_resource.workdir}/#{subdir}/#{new_resource.product_info[:installer]}"
+      path = Pathname(new_resource.workdir)+ new_resource.product_info[:installer]
+      unless subdir.nil?
+	path = Pathname(new_resource.workdir) + subdir + new_resource.product_info[:installer]
       end
+      path.to_s
     end
 
     def attributes_missing?
@@ -52,13 +51,14 @@ module McafeeCookbook
       end
     end
 
-    #get the path to the downloads from attributes file
+    #where the product info comes from
     def from_attribute
       "#{node['mcafee']['url']}#{node['mcafee'][new_resource.name]['package']}"
     end
 
     def from_url
-      "#{new_resource.url}/#{new_resource.product_info[:package]}"
+      t = strip_trailing_slash( new_resource.url )
+      "#{t}/#{new_resource.product_info[:package]}"
     end
 
     def from cookbook_file
@@ -67,6 +67,10 @@ module McafeeCookbook
 
     def from uncpath
       #TODO
+    end
+
+    def strip_trailing_slash(str)
+      str.gsub(/\/+$/, '')
     end
   end
 end
