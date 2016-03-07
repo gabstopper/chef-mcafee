@@ -1,0 +1,109 @@
+class Chef
+  class Provider::McafeeLinux < Chef::Provider::LWRPBase
+    include McafeeCookbook::Helpers
+    include Chef::Mixin::ShellOut
+
+    provides :mcafee, os: 'linux', platform_family: %w(rhel debian)
+    use_inline_resources
+
+    def whyrun_supported?
+      true 
+    end
+
+    action :install do
+      if pkg_exists?
+	Chef::Log.info "Application #{new_resource.name} already installed, doing nothing"
+      else
+        converge_by('Install McAfee product on Linux') do
+	  download_pkgs
+	  run_install
+        end
+      end
+    end
+   
+    action :remove do
+      run_remove
+    end
+   
+    def load_current_resource
+      @current_resource ||= Resource::Mcafee.new(new_resource.name)
+      unless ::File.exists?(new_resource.workdir)
+        new_resource.workdir = Chef::Config[:file_cache_path]
+      end
+      @current_resource.workdir = @new_resource.workdir
+
+      if attributes_missing?
+        attributes_from_node
+      end
+
+      @current_resource
+    end
+
+    def pkg_exists?
+      target = "#{node['mcafee'][new_resource.name]['install_key'].first}"
+      case node['platform_family']
+      when 'debian'
+        cmd = shell_out("dpkg-query -W #{target}")
+        cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
+      end
+      #TODO RHEL
+    end
+
+    def run_install
+      case new_resource.name
+      when 'agent'      
+        package 'unzip' do
+          action :install
+        end
+        bash 'run_agent_install' do
+          code <<-EOH
+            sudo unzip -o #{full_pkg_path} -d #{new_resource.workdir}
+            sudo chmod a+x #{full_installer_path}
+            sudo bash #{full_installer_path} -i
+            EOH
+          notifies :run, 'execute[contact_epo]', :delayed
+        end
+        execute 'contact_epo' do
+          command "sudo /opt/McAfee/cma/bin/cmdagent -p"
+          action :nothing
+        end
+      when 'vse' 
+        cookbook_file "#{ENV['HOME']}/nails.options" do
+          source 'nails.options'
+          mode '0644'
+          action :create
+        end
+        bash 'run_vse_install' do
+          code <<-EOH
+            sudo tar -xzf #{full_pkg_path} -C #{new_resource.workdir}
+            sudo bash #{full_installer_path}
+            EOH
+        end
+      when 'dpc'
+        package 'unzip' do
+          :install
+        end
+        bash 'run_dpc_install' do
+          code <<-EOH
+            sudo unzip -o #{full_pkg_path} -d #{new_resource.workdir}
+            cd #{new_resource.workdir}
+            sudo chmod a+x #{new_resource.workdir}/install.sh
+            sudo bash #{new_resource.workdir}/install.sh -i
+          EOH
+	end
+      end
+    end
+
+    def run_remove
+      if new_resource.name == 'agent'
+        package %w(mfecma mfert) do
+          action :purge
+        end
+      else
+        package new_resource.name do
+          action :purge
+        end
+      end
+    end
+  end
+end
