@@ -1,1 +1,15 @@
+<<<<<<< HEAD
 .kitchen
+=======
+# Put files/directories that should be ignored in this file.
+# Lines that start with '# ' are comments.
+
+# emacs
+*~
+
+# vim
+*.sw[a-z]
+
+# subversion
+*/.svn/*
+>>>>>>> 2b724ff689757c954351bd41d24ce9e5e05f592b

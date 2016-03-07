@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *~
 *#
 .#*
@@ -18,3 +19,13 @@ bin/*
 
 .kitchen/
 .kitchen.local.yml
+=======
+.rake_test_cache
+
+###
+# Ignore Chef key files and secrets
+###
+.chef/*.pem
+.chef/encrypted_data_bag_secret
+.chef
+>>>>>>> 2b724ff689757c954351bd41d24ce9e5e05f592b
