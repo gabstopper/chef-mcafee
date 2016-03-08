@@ -16,17 +16,25 @@ mcafee 'dpc' do
   action :remove
 end
 
-mcafee 'agent' do
-  workdir "/tmp"
-  product_info ({
-    :package => 'FramePkg.exe',
-    :installer => 'FramePkg.exe',
-    :install_key => %w(McAfee\ Agent)}
-  )
-  #url s3.amazon.com
-  #cookbook_file blah
-  #uncpath \\share
-  action :remove
+case node['platform_family']
+when 'rhel', 'debian'
+  mcafee 'agent' do
+    workdir "/tmp"
+    action :remove
+  end
+when 'windows'
+  mcafee 'agent' do
+    workdir "/tmp"
+    product_info ({
+      :package => 'FramePkg.exe',
+      :installer => 'FramePkg.exe',
+      :install_key => %w(McAfee\ Agent)}
+    )
+    #url s3.amazon.com
+    #cookbook_file blah
+    #uncpath \\share
+    action :remove
+  end
 end
 
 #-------------------------End of Recipe-----------------------------------
