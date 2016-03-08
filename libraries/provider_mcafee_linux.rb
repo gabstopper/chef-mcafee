@@ -43,7 +43,7 @@ class Chef
       target = "#{node['mcafee'][new_resource.name]['install_key'].first}"
       case node['platform_family']
       when 'debian'
-        cmd = shell_out("dpkg-query -W #{target}")
+        cmd = shell_out("dpkg --list | grep #{target}")
         cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
       end
       #TODO RHEL
