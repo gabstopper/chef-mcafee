@@ -25,7 +25,6 @@
 #
 # If the ePO server configured can be resolved, nothing is created on the endpoint
 
-puts "hi"
 mcafee = node['mcafee']['epo']['agenthndlr']
 
 ruby_block "ensure node can resolve ePO FQDN" do
