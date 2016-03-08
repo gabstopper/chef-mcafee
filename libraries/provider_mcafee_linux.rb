@@ -14,7 +14,7 @@ class Chef
       if pkg_exists?
 	Chef::Log.info "Application #{new_resource.name} already installed, doing nothing"
       else
-        converge_by('Install McAfee product on Linux') do
+        converge_by('Converging Linux platform') do
 	  download_pkgs
 	  run_install
         end
@@ -95,12 +95,9 @@ class Chef
     end
 
     def run_remove
-      if new_resource.name == 'agent'
-        package %w(mfecma mfert) do
-          action :purge
-        end
-      else
-        package new_resource.name do
+      products = new_resource.product_info[:install_key]
+      products.each do |product|
+        package product do
           action :purge
         end
       end
