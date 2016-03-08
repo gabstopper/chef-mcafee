@@ -45,7 +45,7 @@ module McafeeCookbook
         :installer => node['mcafee'][new_resource.name]['installer'],
         :install_key => node['mcafee'][new_resource.name]['install_key']
       })
-      Chef::Log.info "Product info set from attributes: #{new_resource.product_info}"
+      Chef::Log.debug "Product info set from attributes: #{new_resource.product_info}"
       if attributes_missing? #if attributes not provided in recipe, check attributes file
         fail "Missing attributes required to proceed. Attributes are either configured in the chef recipe or in the cookbooks attribute file."
       end
