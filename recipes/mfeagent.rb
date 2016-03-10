@@ -7,18 +7,21 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'mcafee::eposerver'
-
-mcafee 'agent' do
-  workdir "/tmp"
-#  product_info ({
-#    :package => 'FramePkg.exe',
-#    :installer => 'FramePkg.exe',
-#    :install_key => %w(McAfee\ Agent)}
-#  )
-#  url s3.amazon.com
-#  cookbook_file blah
-#  uncpath \\share
-  action :install
+case node['platform_family']
+when 'rhel', 'debian'
+  mcafee 'agent' do
+    workdir "/tmp"
+    action :install
+  end
+when 'windows'
+  mcafee 'agent' do
+    product_info ({
+      :package => 'FramePkg.exe',
+      :installer => 'FramePkg.exe',
+      :install_key => %w(McAfee\ Agent)}
+    )
+    action :install
+  end
 end
 
 #-------------------------End of Recipe-----------------------------------
