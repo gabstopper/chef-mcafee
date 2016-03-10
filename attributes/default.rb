@@ -1,6 +1,6 @@
 default.mcafee.url = 'https://s3-us-west-2.amazonaws.com/mcafee-deploy/'
 default.mcafee.epo.agenthndlr.fqdn = 'www.lepages.net'
-default.mcafee.epo.agenthndlr.ip   = '50.12.23.11'
+default.mcafee.epo.agenthndlr.ip   = '1.1.1.1'
 default.mcafee.epo.agenthndlr.shortname = 'epo'
 
 case node['platform_family']
@@ -27,7 +27,7 @@ case node['platform_family']
       'install_key' => %w(McAfee\ Agent)
     }
     default['mcafee']['vse'] = {
-      'package' => 'VSE880LMLRP4.Zip',
+      'package' => 'VSE880LMLRP7.Zip',
       'installer' => 'SetupVSE.exe',
       'install_key' => %w(McAfee\ VirusScan\ Enterprise)
     }
