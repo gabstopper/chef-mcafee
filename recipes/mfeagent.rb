@@ -15,17 +15,9 @@ mcafee 'agent' do
 #    :installer => 'FramePkg.exe',
 #    :install_key => %w(McAfee\ Agent)}
 #  )
-  #url s3.amazon.com
-  #cookbook_file blah
-  #uncpath \\share
-  action :install
-end
-
-mcafee 'vse' do
-  action :install
-end
-
-mcafee 'dpc' do
+#  url s3.amazon.com
+#  cookbook_file blah
+#  uncpath \\share
   action :install
 end
 
