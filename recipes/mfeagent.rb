@@ -18,7 +18,7 @@ when 'windows'
     product_info ({
       :package => 'FramePkg.exe',
       :installer => 'FramePkg.exe',
-      :install_key => %w(McAfee\ Agent)}
+      :install_key => ['McAfee Agent']}
     )
     action :install
   end
