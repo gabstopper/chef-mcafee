@@ -73,7 +73,7 @@ TODO: Document attributes
 
 * `uncpath` retrieve installation packages from uncpath **TODO
 
-* `product_info` override product specific settings, specifically:
+* `product_info` hash to override product specific settings, specifically:
   * :package  package name; i.e. myMcafeeInstaller.zip
   * :installer  name of installer package
   * :install_key  name of product, for Windows this is the name listed in Add/Remove Programs. For *nix the package name
