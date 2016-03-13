@@ -87,3 +87,7 @@ mcafee 'agent' do
   action :install
 end
 ```
+
+######Notes
+* All recipes should include the recipe for McAfee Agent: include_recipe 'mcafee::mfeagent'
+* When writing removal recipes, remove the agent last due to dependencies
