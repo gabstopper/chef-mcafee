@@ -14,9 +14,10 @@ This repository contains several directories, and each directory contains a READ
 
 ####Platforms
 See McAfee documentation for more information (www.mcafee.com)
-* `Ubuntu` 
+* `Ubuntu` `12.04, 14.04` 
 * `RedHat`
-* `Windows`
+* `CentOS` `7`
+* `Windows` `2012R2`
 * `Amazon Linux`
 
 TODO: Specific versions
@@ -45,7 +46,7 @@ mcafee 'agent' do
   product_info ({
     :package => 'FramePkg.exe'
     :installer => 'FramePkg.exe'
-    :install_key => %w(McAfee\ Agent)}
+    :install_key => ['McAfee Agent']}
   )
   action :install
 end
@@ -71,6 +72,11 @@ TODO: Document attributes
 * `cookbook_file` retrieve installation packages from cookbook_file **TODO
 
 * `uncpath` retrieve installation packages from uncpath **TODO
+
+* `product_info` override product specific settings, specifically:
+  * :package  package name; i.e. myMcafeeInstaller.zip
+  * :installer  name of installer package
+  * :install_key  name of product, for Windows this is the name listed in Add/Remove Programs. For *nix the package name
 
 **Note**: If `url`, `cookbook_file` or `uncpath` are not specified, the required installer packages and files will come from the attributes/default.rb. 
 See 'attributes' section above for predefined attributes.
