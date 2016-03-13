@@ -43,10 +43,12 @@ class Chef
       target = "#{node['mcafee'][new_resource.name]['install_key'].first}"
       case node['platform_family']
       when 'debian'
-        cmd = shell_out("dpkg --list | grep #{target}")
+        cmd = shell_out("dpkg --list | grep -i #{target}")
         cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
+      when 'rhel', 'amazon'
+	cmd = shell_out("rpm -qa | grep -i #{target}")
+	cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
       end
-      #TODO RHEL
     end
 
     def run_install
@@ -97,6 +99,7 @@ class Chef
     def run_remove
       products = new_resource.product_info[:install_key]
       products.each do |product|
+        Chef::Log.info "Attempting to purge product: #{product}"
         package product do
           action :purge
         end
