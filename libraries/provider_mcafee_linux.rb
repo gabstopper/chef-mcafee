@@ -45,7 +45,7 @@ class Chef
       when 'debian'
 	cmd = shell_out ("dpkg -s #{target} | grep Status | awk '{print $NF}'")
 	cmd.stdout =~ /installed/	
-      when 'rhel', 'amazon'
+      when 'rhel', 'amazon', 'suse'
 	cmd = shell_out("rpm -qa | grep -i #{target}")
 	cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
       end
