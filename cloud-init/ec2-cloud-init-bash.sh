@@ -12,10 +12,10 @@ then
   if grep -qv "amzn" <<< "$os"	#anything but amazon linux
   then
     if grep -iqe '^Defaults[[:space:]]\+requiretty' /etc/sudoers	#make sure we'll have ability to sudo
-	then
-	  echo "Adding /etc/sudoers.d file to allow sudo without tty"
-	  echo -e 'Defaults:ec2-user !requiretty\nDefaults:root !requiretty' > /etc/sudoers.d/99-cloud-init
-	fi  
+    then
+      echo "Adding /etc/sudoers.d file to allow sudo without tty"
+      echo -e 'Defaults:ec2-user !requiretty\nDefaults:root !requiretty' > /etc/sudoers.d/99-cloud-init
+    fi  
   fi
   #aws tools
   curl -O https://bootstrap.pypa.io/get-pip.py
