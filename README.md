@@ -49,9 +49,9 @@ TODO: Document attributes
 * `uncpath` retrieve installation packages from uncpath **TODO
 
 * `product_info` hash to override product specific settings, specifically:
-  * :package  package name; i.e. myMcafeeInstaller.zip
-  * :installer  name of installer package
-  * :install_key  name of product, for Windows this is the name listed in Add/Remove Programs. For *nix the package name
+  * `:package`  package name; i.e. myMcafeeInstaller.zip
+  * `:installer`  name of installer package
+  * `:install_key`  name of product, for Windows this is the name listed in Add/Remove Programs. For *nix the package name
 
 **Note**: If `url`, `cookbook_file` or `uncpath` are not specified, the required installer packages and files will come from the attributes/default.rb. 
 See 'attributes' section above for predefined attributes.
