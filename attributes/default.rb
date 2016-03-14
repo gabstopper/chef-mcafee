@@ -4,7 +4,7 @@ default.mcafee.epo.agenthndlr.ip   = '1.1.1.1'
 default.mcafee.epo.agenthndlr.shortname = 'epo'
 
 case node['platform_family']
-  when 'rhel', 'debian'
+  when 'rhel', 'debian', 'suse'
     default['mcafee']['vse'] = {
       'package' => 'McAfeeVSEForLinux-2.0.2.29099-release.tar.gz',
       'installer' => 'McAfeeVSEForLinux-2.0.2.29099-installer',
