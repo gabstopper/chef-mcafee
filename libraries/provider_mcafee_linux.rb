@@ -3,7 +3,7 @@ class Chef
     include McafeeCookbook::Helpers
     include Chef::Mixin::ShellOut
 
-    provides :mcafee, os: 'linux', platform_family: %w(rhel debian)
+    provides :mcafee, os: 'linux', platform_family: %w(rhel debian suse)
     use_inline_resources
 
     def whyrun_supported?
