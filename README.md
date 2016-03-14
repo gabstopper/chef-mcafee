@@ -29,8 +29,43 @@ See McAfee documentation for more information (www.mcafee.com)
  * `SUSE Linux Enterprise Server 12 SP1`
 
 ####Attributes
+######General Attributes
+`default.mcafee.url` : Default location for retrieving installation files
 
-TODO: Document attributes
+######Package Info Attributes
+Each `name` parameter must have 3 attributes in order to identify where to find the product information.
+
+For example, to define attributes for McAfee Agent: 
+
+`default['mcafee']['agent']['package']`  : default location for mcafee agent package
+
+`default['mcafee']['agent']['installer']`  : name of installer from agent package
+
+`default['mcafee']['agent']['install_key']`  : windows display name or unix package name
+
+For Windows based McAfee Agent, VSE and DPC:
+
+```ruby
+ case node['platform_family']
+ when 'windows'
+ default['mcafee']['agent'] = {
+   'package' => 'agentPackages.zip',
+   'installer' => 'install.sh',
+   'install_key' => ['MFEcma', 'MFErt']
+ }
+ default['mcafee']['vse'] = {
+   'package' => 'VSE880LMLRP7.Zip',
+   'installer' => 'SetupVSE.exe',
+   'install_key' => ['McAfee VirusScan Enterprise']
+ }
+ default['mcafee']['dpc'] = {
+   'package' => 'MDPC1.0_Deployment_Windows.zip',
+   'installer' => 'MDPCAgent.msi',
+   'install_key' => ['McAfee Data Protection Agent']
+ }
+ end
+```
+**Note** Settings can be overridden in the recipe but pay attention to platform type. To set these globally, define in attributes/default.rb.
 
 ####Resource/Provider
 ######Actions
