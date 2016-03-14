@@ -34,13 +34,15 @@ class Chef
       unless ::File.exists?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
-      @current_resource.workdir = @new_resource.workdir
+      #@current_resource.workdir = @new_resource.workdir
+      current_resource.workdir(new_resource.workdir)
       
       if attributes_missing?
 	attributes_from_node
       end
 
-      @current_resource	
+      #@current_resource	
+      current_resource	
     end 
 
     def pkg_exists?
