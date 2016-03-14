@@ -6,7 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe 'mcafee::eposerver'
 
 mcafee 'agent' do
   action :install
