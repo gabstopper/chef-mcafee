@@ -10,7 +10,7 @@
 #include_recipe 'mcafee::default'
 
 case node['platform_family']
-when 'rhel', 'debian'
+when 'rhel', 'debian', 'suse'
   mcafee 'agent' do
     workdir "/tmp"
     action :install

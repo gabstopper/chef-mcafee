@@ -76,7 +76,7 @@ class Chef
           action :create
         end
 	case node['platform_family']
-	when 'rhel' #minimal install on rhel and centos may be missing these required packages
+	when 'rhel', 'suse' #minimal install on rhel, suse and centos may be missing these required packages
 	  package ['ed', 'net-tools', 'bind-utils']  do
 	    action :install
 	  end
