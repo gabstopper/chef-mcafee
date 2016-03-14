@@ -6,7 +6,8 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe 'mcafee::default'
+
+#include_recipe 'mcafee::default'
 
 case node['platform_family']
 when 'rhel', 'debian'
