@@ -30,21 +30,21 @@ class Chef
       unless ::File.exists?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
-      @current_resource.workdir = @new_resource.workdir
+      current_resource.workdir(new_resource.workdir)
 
       if attributes_missing?
         attributes_from_node
       end
 
-      @current_resource
+      current_resource
     end
 
     def pkg_exists?
       target = "#{node['mcafee'][new_resource.name]['install_key'].first}"
       case node['platform_family']
       when 'debian'
-        cmd = shell_out("dpkg --list | grep -i #{target}")
-        cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
+	cmd = shell_out ("dpkg -s #{target} | grep Status | awk '{print $NF}'")
+	cmd.stdout =~ /installed/	
       when 'rhel', 'amazon'
 	cmd = shell_out("rpm -qa | grep -i #{target}")
 	cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
@@ -75,6 +75,12 @@ class Chef
           mode '0644'
           action :create
         end
+	case node['platform_family']
+	when 'rhel' #minimal install on rhel and centos may be missing these required packages
+	  package ['ed', 'net-tools', 'bind-utils']  do
+	    action :install
+	  end
+	end
         bash 'run_vse_install' do
           code <<-EOH
             sudo tar -xzf #{full_pkg_path} -C #{new_resource.workdir}
@@ -99,10 +105,13 @@ class Chef
     def run_remove
       products = new_resource.product_info[:install_key]
       products.each do |product|
-        Chef::Log.info "Attempting to purge product: #{product}"
-        package product do
-          action :purge
-        end
+	case node['platform_family']
+	when 'debian' #apt-cache call pkg manager seems to be case sensitive, unlike using dpkg directly
+	  product = product.downcase
+	end
+	package product do
+	  action :purge
+	end 
       end
     end
   end
