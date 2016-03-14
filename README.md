@@ -22,7 +22,11 @@ See McAfee documentation for more information (www.mcafee.com)
 * `RedHat`
 * `CentOS` `7`
 * `Windows` `2012R2`
-* `Amazon Linux`
+* `Amazon`
+ * `Amazon Linux AMI 2015.09.2 x86_64 HVM`
+ * `RHEL-7.2_HVM_GA-20151112`
+ * `ubuntu-trusty-14.04-amd64-server-20160114.5`
+ * `SUSE Linux Enterprise Server 12 SP1`
 
 ####Attributes
 
