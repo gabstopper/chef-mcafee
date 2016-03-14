@@ -1,0 +1,38 @@
+<powershell>
+#Load the compression assembly used to unzip files
+[System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
+Set-ExecutionPolicy unrestricted -Force
+
+New-Item c:/temp -ItemType Directory -Force
+set-location c:/temp
+
+#Download the chef client msi installer
+read-s3object -bucketname chef-lepages/windows -key chef-client-12.7.2-1-x86.msi -file chef-client-12.7.2-1-x86.msi
+
+#Run the MSI installer in silent mode and wait for completion
+Start-Process C:/temp/chef-client-12.7.2-1-x86.msi /qn -Wait
+
+New-Item c:/chef -ItemType Directory -Force
+set-location c:/chef
+
+#Download the chef files
+read-s3object -bucketname chef-lepages/windows -key solo.rb -file solo.rb
+read-s3object -bucketname chef-lepages/windows -key node.json -file node.json
+New-Item c:/chef/cookbooks -ItemType Directory -Force
+set-location c:/chef/cookbooks
+read-s3object -bucketname chef-lepages/windows -key mcafee.zip -file mcafee.zip
+
+#Unzip the Chef cookbook
+$cookbooks_dir = "c:/chef/cookbooks"
+$mcafee_zip = "c:/chef/cookbooks/mcafee.zip"
+[System.IO.Compression.ZipFile]::ExtractToDirectory($mcafee_zip, $cookbooks_dir)
+
+#Update the environment variables for the newly installed chef
+#Since we are executing 'chef-solo' in the same PowerShell session we must
+#update the environment variables, otherwise chef-solo will be an unrecognized command
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+
+#Run chef-solo with appropriate parameters
+chef-solo -c c:/chef/solo.rb -j c:/chef/node.json -L c:/chef/log.log -l info
+
+</powershell>
