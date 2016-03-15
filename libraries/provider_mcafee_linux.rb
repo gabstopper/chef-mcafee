@@ -59,14 +59,14 @@ class Chef
         end
         bash 'run_agent_install' do
           code <<-EOH
-            sudo unzip -o #{full_pkg_path} -d #{new_resource.workdir}
-            sudo chmod a+x #{full_installer_path}
-            sudo bash #{full_installer_path} -i
+            unzip -o #{full_pkg_path} -d #{new_resource.workdir}
+            chmod a+x #{full_installer_path}
+            bash #{full_installer_path} -i
             EOH
           notifies :run, 'execute[contact_epo]', :delayed
         end
         execute 'contact_epo' do
-          command "sudo /opt/McAfee/cma/bin/cmdagent -p"
+          command "/opt/McAfee/cma/bin/cmdagent -p"
           action :nothing
         end
       when 'vse' 
@@ -83,8 +83,8 @@ class Chef
 	end
         bash 'run_vse_install' do
           code <<-EOH
-            sudo tar -xzf #{full_pkg_path} -C #{new_resource.workdir}
-            sudo bash #{full_installer_path}
+            tar -xzf #{full_pkg_path} -C #{new_resource.workdir}
+            bash #{full_installer_path}
             EOH
         end
       when 'dpc'
@@ -93,10 +93,10 @@ class Chef
         end
         bash 'run_dpc_install' do
           code <<-EOH
-            sudo unzip -o #{full_pkg_path} -d #{new_resource.workdir}
+            unzip -o #{full_pkg_path} -d #{new_resource.workdir}
             cd #{new_resource.workdir}
-            sudo chmod a+x #{new_resource.workdir}/install.sh
-            sudo bash #{new_resource.workdir}/install.sh -i
+            chmod a+x #{new_resource.workdir}/install.sh
+            bash #{new_resource.workdir}/install.sh -i
           EOH
 	end
       end
