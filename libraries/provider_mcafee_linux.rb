@@ -14,7 +14,7 @@ class Chef
       if pkg_exists?
 	Chef::Log.info "Application #{new_resource.name} already installed, doing nothing"
       else
-        converge_by('Converging Linux platform') do
+        converge_by('Install on Linux platform') do
 	  download_pkgs
 	  run_install
         end
@@ -22,30 +22,43 @@ class Chef
     end
    
     action :remove do
-      run_remove
+      if pkg_exists?     
+        converge_by('Removing package on Linux') do
+          run_remove
+        end
+      end
     end
    
     def load_current_resource
       @current_resource ||= Resource::Mcafee.new(new_resource.name)
+
       unless ::File.exists?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
-      current_resource.workdir(new_resource.workdir)
+      #current_resource.workdir(new_resource.workdir)
 
       if attributes_missing?
         attributes_from_node
       end
 
+      #current_resource.input(compile_products(new_resource.input))
+      #Chef::Log.info "Input is: #{current_resource.input}"
+      #current_resource.input.each do |y|
+	#unless is_valid_product?(y)
+	#  raise "Invalid product provided in name attribute: #{y}"
+	#end
+      #end
+
       current_resource
     end
-
+  
     def pkg_exists?
-      target = "#{node['mcafee'][new_resource.name]['install_key'].first}"
-      case node['platform_family']
-      when 'debian'
+      target = node['mcafee'][new_resource.name]['install_key'].first
+      case node[:platform]
+      when 'debian', 'ubuntu'
 	cmd = shell_out ("dpkg -s #{target} | grep Status | awk '{print $NF}'")
 	cmd.stdout =~ /installed/	
-      when 'rhel', 'amazon', 'suse'
+      when 'redhat', 'amazon', 'centos', 'suse'
 	cmd = shell_out("rpm -qa | grep -i #{target}")
 	cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
       end
@@ -106,7 +119,7 @@ class Chef
       products = new_resource.product_info[:install_key]
       products.each do |product|
 	case node['platform_family']
-	when 'debian' #apt-cache call pkg manager seems to be case sensitive, unlike using dpkg directly
+	when 'debian' #case sensitive on package name for some reason
 	  product = product.downcase
 	end
 	package product do
