@@ -10,21 +10,15 @@ then
   os=$(uname -a)
   echo $os
   if grep -qv "amzn" <<< "$os"	#anything but amazon linux
-  then
-    if grep -iqe '^Defaults[[:space:]]\+requiretty' /etc/sudoers	#make sure we'll have ability to sudo
-    then
-      echo "Adding /etc/sudoers.d file to allow sudo without tty"
-      echo -e 'Defaults:ec2-user !requiretty\nDefaults:root !requiretty' > /etc/sudoers.d/99-cloud-init
-    fi  
+    #aws tools
+    curl -O https://bootstrap.pypa.io/get-pip.py
+    python get-pip.py
+    pip install awscli
+    #instance region for running aws s3
+    region=`curl -s 169.254.169.254/latest/meta-data/placement/availability-zone`
+    region=${region::-1}
+    export AWS_DEFAULT_REGION=$region
   fi
-  #aws tools
-  curl -O https://bootstrap.pypa.io/get-pip.py
-  python get-pip.py
-  pip install awscli
-  #instance region for running aws s3
-  region=`curl -s 169.254.169.254/latest/meta-data/placement/availability-zone`
-  region=${region::-1}
-  export AWS_DEFAULT_REGION=$region
 fi
 
 
