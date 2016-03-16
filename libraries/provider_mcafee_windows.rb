@@ -23,7 +23,9 @@ class Chef
 
     action :remove do
       if pkg_exists?
-        run_remove
+	converge_by("Removing on Windows platform") do
+          run_remove
+	end
       else
 	Chef::Log.info "Application '#{new_resource.name}' is not installed, cannot be removed"
       end
@@ -34,20 +36,20 @@ class Chef
       unless ::File.exists?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
-      #@current_resource.workdir = @new_resource.workdir
-      current_resource.workdir(new_resource.workdir)
       
       if attributes_missing?
 	attributes_from_node
       end
 
-      #@current_resource	
       current_resource	
     end 
 
     def pkg_exists?
-      Chef::Log.info "Checking for package: #{new_resource.product_info[:install_key].first}"
-      is_package_installed?(new_resource.product_info[:install_key].first)
+      #Chef::Log.info "Checking for package: #{new_resource.product_info[:install_key].first}"
+      #is_package_installed?(new_resource.product_info[:install_key].first)
+      target = node['mcafee'][new_resource.name]['install_key'].first
+      Chef::Log.info "Checking for package: #{target}"
+      is_package_installed?(target)
     end
 
     def run_install
