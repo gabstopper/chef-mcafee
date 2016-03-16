@@ -35,7 +35,6 @@ class Chef
       unless ::File.exists?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
-      #current_resource.workdir(new_resource.workdir)
 
       if attributes_missing?
         attributes_from_node
