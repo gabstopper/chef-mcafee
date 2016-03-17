@@ -49,7 +49,6 @@ class Chef
 
     #helper method for files downloaded as zip's to be extract to specifie dir
     def unzip_to_directory
-      Chef::Log.info "Zip file to be extracted to: #{new_resource.workdir}/#{new_resource.name}"
       windows_zipfile "#{new_resource.workdir}/#{new_resource.name}"  do
         source full_pkg_path
 	action :unzip
