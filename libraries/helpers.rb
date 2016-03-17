@@ -43,7 +43,7 @@ module McafeeCookbook
           :install_key => node['mcafee'][new_resource.name]['install_key']
         })
       end
-      Chef::Log.info "Resolved product_info: #{new_resource.product_info}"
+      Chef::Log.debug "Resolved product_info: #{new_resource.product_info}"
     end
 
     #where the product info comes from
