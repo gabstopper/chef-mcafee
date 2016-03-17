@@ -22,7 +22,7 @@ module McafeeCookbook
     def full_pkg_path(subdir = nil)
       path = Pathname(new_resource.workdir) + new_resource.product_info[:package]
       unless subdir.nil?
-	path = Pathname(new_resource.workdir) + subdir + new_resource_product_info[:installer]
+	path = Pathname(new_resource.workdir) + subdir + new_resource_product_info[:package]
       end	
       path.to_s
     end
