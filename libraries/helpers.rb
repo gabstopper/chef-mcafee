@@ -4,7 +4,7 @@ module McafeeCookbook
     def download_pkgs
       if new_resource.url
         remote_file full_pkg_path do
-          source from_url
+          source url_from_recipe
           action :create_if_missing
         end
       elsif new_resource.cookbook_file
@@ -12,8 +12,8 @@ module McafeeCookbook
       elsif new_resource.uncpath
         #TODO
       else
-        remote_file full_pkg_path do
-          source from_attribute
+        remote_file full_pkg_path do	#from attributes/default.rb
+          source url_from_attribute
           action :create_if_missing
         end
       end
@@ -35,30 +35,28 @@ module McafeeCookbook
       path.to_s
     end
 
-    def attributes_missing?
-      new_resource.product_info.values.include? nil
-    end
-
-    def attributes_from_node
-      new_resource.product_info({
-        :package => node['mcafee'][new_resource.name]['package'],
-        :installer => node['mcafee'][new_resource.name]['installer'],
-        :install_key => node['mcafee'][new_resource.name]['install_key']
-      })
-      Chef::Log.debug "Product info set from attributes: #{new_resource.product_info}"
-      if attributes_missing? #if attributes not provided in recipe, check attributes file
-        fail "Missing attributes required to proceed. Attributes are either configured in the chef recipe or in the cookbooks attribute file."
+    def load_product_info
+      if new_resource.product_info.values.include? nil
+        new_resource.product_info({
+          :package => node['mcafee'][new_resource.name]['package'],
+          :installer => node['mcafee'][new_resource.name]['installer'],
+          :install_key => node['mcafee'][new_resource.name]['install_key']
+        })
       end
+      Chef::Log.info "Resolved product_info: #{new_resource.product_info}"
     end
 
     #where the product info comes from
-    def from_attribute
-      "#{node['mcafee']['url']}#{node['mcafee'][new_resource.name]['package']}"
+    def url_from_attribute
+      generate_download_url(node['mcafee']['url'])
     end
 
-    def from_url
-      t = strip_trailing_slash( new_resource.url )
-      "#{t}/#{new_resource.product_info[:package]}"
+    def url_from_recipe
+      generate_download_url(new_resource.url)
+    end
+
+    def generate_download_url(base_url)
+      base_url.gsub(/\/+$/, '') + "/" + new_resource.product_info[:package] 
     end
 
     def from cookbook_file
@@ -68,9 +66,6 @@ module McafeeCookbook
     def from uncpath
       #TODO
     end
-
-    def strip_trailing_slash(str)
-      str.gsub(/\/+$/, '')
-    end
   end
 end
+
