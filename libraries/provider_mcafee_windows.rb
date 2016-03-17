@@ -37,19 +37,14 @@ class Chef
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
       
-      if attributes_missing?
-	attributes_from_node
-      end
+      load_product_info
 
       current_resource	
     end 
 
     def pkg_exists?
-      #Chef::Log.info "Checking for package: #{new_resource.product_info[:install_key].first}"
-      #is_package_installed?(new_resource.product_info[:install_key].first)
-      target = node['mcafee'][new_resource.name]['install_key'].first
-      Chef::Log.info "Checking for package: #{target}"
-      is_package_installed?(target)
+      target = new_resource.product_info[:install_key].first
+      is_package_installed?(target) #call windows cookbook function
     end
 
     def run_install
