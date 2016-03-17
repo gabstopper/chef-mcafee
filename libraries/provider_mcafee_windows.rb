@@ -47,15 +47,6 @@ class Chef
       is_package_installed?(target) #call windows cookbook function
     end
 
-    #helper method for files downloaded as zip's to be extract to specifie dir
-    def unzip_to_directory
-      windows_zipfile "#{new_resource.workdir}/#{new_resource.name}"  do
-        source full_pkg_path
-	action :unzip
-	not_if { ::File.exists?( full_installer_path(new_resource.name) )}
-      end
-    end
-    
     def run_install
       unzip_to_directory if ::File.extname(new_resource.product_info[:package]) =~ /\.(zip)$/i
       case new_resource.name
@@ -101,6 +92,17 @@ class Chef
             msiexec /x '#{modified_str}' /quiet /qn
           EOH
         end
+      end
+    end
+
+    private
+
+    #helper method for files downloaded as zip's to be extract to specifie dir
+    def unzip_to_directory
+      windows_zipfile "#{new_resource.workdir}/#{new_resource.name}"  do
+        source full_pkg_path
+	action :unzip
+	not_if { ::File.exists?( full_installer_path(new_resource.name) )}
       end
     end
   end
