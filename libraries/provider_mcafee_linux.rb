@@ -14,7 +14,7 @@ class Chef
       if pkg_exists?
 	Chef::Log.info "Application #{new_resource.name} already installed, doing nothing"
       else
-        converge_by('Install on Linux platform') do
+        converge_by('Installing on Linux platform') do
 	  download_pkgs
 	  run_install
         end
@@ -32,34 +32,24 @@ class Chef
     def load_current_resource
       @current_resource ||= Resource::Mcafee.new(new_resource.name)
 
-      unless ::File.exists?(new_resource.workdir)
+      unless ::File.directory?(new_resource.workdir)
         new_resource.workdir = Chef::Config[:file_cache_path]
       end
 
-      if attributes_missing?
-        attributes_from_node
-      end
-
-      #current_resource.input(compile_products(new_resource.input))
-      #Chef::Log.info "Input is: #{current_resource.input}"
-      #current_resource.input.each do |y|
-	#unless is_valid_product?(y)
-	#  raise "Invalid product provided in name attribute: #{y}"
-	#end
-      #end
+      load_product_info
 
       current_resource
     end
   
     def pkg_exists?
-      target = node['mcafee'][new_resource.name]['install_key'].first
+      target = new_resource.product_info[:install_key].first
       case node[:platform]
       when 'debian', 'ubuntu'
 	cmd = shell_out ("dpkg -s #{target} | grep Status | awk '{print $NF}'")
 	cmd.stdout =~ /installed/	
       when 'redhat', 'amazon', 'centos', 'suse'
 	cmd = shell_out("rpm -qa | grep -i #{target}")
-	cmd.stdout =~ /#{node['mcafee'][new_resource.name]['install_key']}/
+	cmd.stdout =~ /#{target}/
       end
     end
 
