@@ -47,7 +47,18 @@ class Chef
       is_package_installed?(target) #call windows cookbook function
     end
 
+    #helper method for files downloaded as zip's to be extract to specifie dir
+    def unzip_to_directory
+      Chef::Log.info "Zip file to be extracted to: #{new_resource.workdir}/#{new_resource.name}"
+      windows_zipfile "#{new_resource.workdir}/#{new_resource.name}"  do
+        source full_pkg_path
+	action :unzip
+	not_if { ::File.exists?( full_installer_path(new_resource.name) )}
+      end
+    end
+    
     def run_install
+      unzip_to_directory if ::File.extname(new_resource.product_info[:package]) =~ /\.(zip)$/i
       case new_resource.name
       when 'agent'
         package 'McAfee Agent' do
@@ -56,22 +67,12 @@ class Chef
           options '/install=agent /silent'
         end
       when 'vse'
-        windows_zipfile "#{new_resource.workdir}/vse" do
-	  source full_pkg_path
-          action :unzip
-          not_if { ::File.exists?( full_installer_path('vse') )}
-        end
         package 'McAfee VirusScan Enterprise' do #Need to run the exe to embed language strings into msi
           source full_installer_path('vse')
           installer_type :custom
           options '/q'  #add this option to log app install:  /l*v "c:\temp\log.txt"
         end
       when 'dpc'
-        windows_zipfile "#{new_resource.workdir}/dpc" do
-          source full_pkg_path
-          action :unzip
-          not_if { ::File.exists?( full_installer_path('dpc') )}
-        end
         package 'Data Protection for Cloud' do
 	  source full_installer_path('dpc')
           installer_type :msi
