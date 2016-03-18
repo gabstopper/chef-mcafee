@@ -97,7 +97,6 @@ class Chef
 
     private
 
-    #helper method for files downloaded as zip's to be extract to specifie dir
     def unzip_to_directory
       windows_zipfile "#{new_resource.workdir}/#{new_resource.name}"  do
         source full_pkg_path
