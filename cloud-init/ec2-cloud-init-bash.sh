@@ -1,5 +1,25 @@
 #!/bin/bash
-#tested on AWS ubuntu, redhat and amazon linux
+# Tested on AWS ubuntu, redhat and amazon linux
+
+# In order for this to work, make sure you create an IAM role and assign it to the launch instance. The relavant line:
+# arn:aws:s3:::chef-lepages/* specifies the name of the S3 bucket. In this case, the S3 bucket is named "chef-lepages"
+# 
+# {
+#    "Version": "2012-10-17",
+#    "Statement": [
+#        {
+#            "Effect": "Allow",
+#            "Action": [
+#                "s3:GetObject",
+#                "s3:ListBucket"
+#            ],
+#            "Resource": [
+#                "arn:aws:s3:::chef-lepages/*"
+#            ]
+#        }
+#    ]
+#}
+
 #install chef omnibus client
 true && curl -L https://www.opscode.com/chef/install.sh | bash
 mkdir /etc/chef
