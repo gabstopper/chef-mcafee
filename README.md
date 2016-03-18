@@ -67,8 +67,6 @@ For Windows based McAfee Agent, VSE and DPC:
 ```
 **Note** Settings can be overridden in the recipe but pay attention to platform type. To set these globally, define in attributes/default.rb.
 
-See Properties for a description of each key/value
-
 ####Resource/Provider
 ######Actions
 * `:install` (default action) install software, the specific provider will manage installation when the host is windows vs linux
