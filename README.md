@@ -33,9 +33,9 @@ See McAfee documentation for more information (www.mcafee.com)
 `default.mcafee.url` : Default location for retrieving installation files
 
 ######Package Info Attributes
-Each `name` parameter must have 3 attributes in order to identify where to find the product information.
+Each `name` property must have 3 associated attributes defined in order to identify where to find the product information.
 
-For example, to define attributes for McAfee Agent: 
+For example, to define attributes for McAfee Agent in attributes/default.rb: 
 
 `default['mcafee']['agent']['package']`  : default location for mcafee agent package
 
@@ -67,13 +67,15 @@ For Windows based McAfee Agent, VSE and DPC:
 ```
 **Note** Settings can be overridden in the recipe but pay attention to platform type. To set these globally, define in attributes/default.rb.
 
+See Properties for a description of each key/value
+
 ####Resource/Provider
 ######Actions
 * `:install` (default action) install software, the specific provider will manage installation when the host is windows vs linux
 
 * `:remove` removes software, the specific provider will manage installation when the host is windows vs linux
 
-######Parameters
+######Properties
 * `name` name of McAfee product to install. Valid options are:
   * `agent` McAfee Agent
   * `vse`   VirusScan Enterprise
@@ -92,13 +94,14 @@ For Windows based McAfee Agent, VSE and DPC:
   * `:installer`  name of installer package
   * `:install_key`  name of product, for Windows this is the name listed in Add/Remove Programs. For *nix the package name
 
-**Note**: If `url`, `cookbook_file` or `uncpath` are not specified, the required installer packages and files will come from the attributes/default.rb. 
-See 'attributes' section above for predefined attributes.
+**Note**: If `url`, `cookbook_file` or `uncpath` are not specified in the recipe, the required installer packages and files will come from the attributes/default.rb. 
 
 If `workdir` is not specified, the working directory will default to Chef::Config[:file_cache_path]. For windows: C:\chef\cache, for linux: /var/chef/cache
 
 ####Recipes
 ```ruby
+
+#Platform independent
 mcafee 'agent' do
   action :install
 end
@@ -115,9 +118,10 @@ mcafee 'dpc' do
   action :remove
 end
 
+#Windows specific; override download url, set workdir and set product info
 mcafee 'agent' do
   url s3.amazonaws.com/myrepository
-  workdir "/tmp"
+  workdir "C:/tmp"
   product_info ({
     :package => 'FramePkg.exe'
     :installer => 'FramePkg.exe'
