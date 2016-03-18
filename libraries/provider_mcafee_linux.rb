@@ -54,53 +54,43 @@ class Chef
     end
 
     def run_install
+      unzip_to_directory if ::File.extname(new_resource.product_info[:package]) =~ /\.(zip)$/i 
       case new_resource.name
       when 'agent'      
-        package 'unzip' do
-          action :install
-        end
-        bash 'run_agent_install' do
-          code <<-EOH
-            unzip -o #{full_pkg_path} -d #{new_resource.workdir}
-            chmod a+x #{full_installer_path}
-            bash #{full_installer_path} -i
-            EOH
-          notifies :run, 'execute[contact_epo]', :delayed
-        end
+	execute 'run_agent_install' do
+	  command "bash #{full_installer_path} -i"
+	  action :run
+	end
         execute 'contact_epo' do
           command "/opt/McAfee/cma/bin/cmdagent -p"
-          action :nothing
+          action :run
         end
       when 'vse' 
-        cookbook_file "#{ENV['HOME']}/nails.options" do
-          source 'nails.options'
-          mode '0644'
-          action :create
-        end
 	case node['platform_family']
 	when 'rhel', 'suse' #minimal install on rhel, suse and centos may be missing these required packages
 	  package ['ed', 'net-tools', 'bind-utils']  do
 	    action :install
 	  end
 	end
-        bash 'run_vse_install' do
-          code <<-EOH
-            tar -xzf #{full_pkg_path} -C #{new_resource.workdir}
-            bash #{full_installer_path}
-            EOH
-        end
-      when 'dpc'
-        package 'unzip' do
-          :install
-        end
-        bash 'run_dpc_install' do
-          code <<-EOH
-            unzip -o #{full_pkg_path} -d #{new_resource.workdir}
-            cd #{new_resource.workdir}
-            chmod a+x #{new_resource.workdir}/install.sh
-            bash #{new_resource.workdir}/install.sh -i
-          EOH
+	execute "unpack_tar_gz" do
+	  command "tar -xzf #{full_pkg_path} -C #{new_resource.workdir}"
+	  action :run
 	end
+        cookbook_file "#{ENV['HOME']}/nails.options" do
+          source 'nails.options'
+          mode '0644'
+          action :create
+        end
+	execute "run_bash_install" do
+	  command "bash #{full_installer_path}"
+	  action :run
+	end
+      when 'dpc'
+	execute 'run_dpc_install' do
+	  command "bash #{new_resource.workdir}/install.sh -i"
+	  cwd new_resource.workdir
+	  action :run
+        end 
       end
     end
 
@@ -114,6 +104,18 @@ class Chef
 	package product do
 	  action :purge
 	end 
+      end
+    end
+
+    private
+
+    def unzip_to_directory
+      package 'unzip' do
+        action :install
+      end
+      execute "unzip_package" do
+        command "unzip -o #{full_pkg_path} -d #{new_resource.workdir}"
+        action :run
       end
     end
   end
