@@ -87,7 +87,8 @@ class Chef
 	end
       when 'dpc'
 	execute 'run_dpc_install' do
-	  command "bash #{new_resource.workdir}/install.sh -i"
+	  #command "bash #{new_resource.workdir}/install.sh -i"
+	  command "bash #{full_installer_path} -i"
 	  cwd new_resource.workdir
 	  action :run
         end 
@@ -98,7 +99,7 @@ class Chef
       products = new_resource.product_info[:install_key]
       products.each do |product|
 	case node['platform_family']
-	when 'debian' #case sensitive on package name for some reason
+	when 'debian' #case sensitive on when running apt-cache on older ubuntu releases
 	  product = product.downcase
 	end
 	package product do
