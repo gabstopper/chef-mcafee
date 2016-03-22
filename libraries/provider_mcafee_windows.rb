@@ -48,23 +48,27 @@ class Chef
     end
 
     def run_install
-      unzip_to_directory if ::File.extname(new_resource.product_info[:package]) =~ /\.(zip)$/i
+      derived_installpath = full_installer_path
+      if ::File.extname(new_resource.product_info[:package]) =~ /\.(zip)$/i #If zipped, extract to product name dir
+	unzip_to_directory
+	derived_installpath = full_installer_path(new_resource.name)
+      end
       case new_resource.name
       when 'agent'
         package 'McAfee Agent' do
-	  source full_pkg_path
+	  source derived_installpath
           installer_type :custom
           options '/install=agent /silent'
         end
       when 'vse'
         package 'McAfee VirusScan Enterprise' do #Need to run the exe to embed language strings into msi
-          source full_installer_path('vse')
+          source derived_installpath
           installer_type :custom
           options '/q'  #add this option to log app install:  /l*v "c:\temp\log.txt"
         end
       when 'dpc'
         package 'Data Protection for Cloud' do
-	  source full_installer_path('dpc')
+	  source derived_installpath
           installer_type :msi
         end
       end
@@ -73,11 +77,15 @@ class Chef
     def run_remove
       case new_resource.name
       when 'agent'
-        package 'McAfee Agent-ignore' do
-          source full_installer_path
-          installer_type :custom
-          options '/remove=agent /silent'
-        end
+	if exe_installer.nil? #agent should be removed from installer source
+	  Chef::Log.warn "Could not find installer: #{new_resource.product_info[:installer]}, skipping removal"
+        else
+          package 'McAfee Agent-ignore' do
+            source full_installer_path #use installer to remove
+            installer_type :custom
+            options '/remove=agent /silent'
+          end
+	end
       when 'vse'
         package 'McAfee VirusScan Enterprise' do
           action :remove
@@ -86,7 +94,7 @@ class Chef
         end
       when 'dpc'      #CHEF-4928 - uninstall key is set to I and should be X (DPC 1.0.1)
         pkg = new_resource.product_info[:install_key].first
-        modified_str = installed_packages[pkg][:uninstall_string].match(/({.*})/)[1] #tmp kludge
+        modified_str = installed_packages[pkg][:uninstall_string].match(/({.*})/)[1] #tmp kludge, should check any uninstall key that uses msiexec
         powershell_script 'McAfee Data Protection Agent' do
           code <<-EOH
             msiexec /x '#{modified_str}' /quiet /qn
@@ -104,6 +112,15 @@ class Chef
 	not_if { ::File.exists?( full_installer_path(new_resource.name) )}
       end
     end
+    
+    def exe_installer
+      if ::File.exists?(full_installer_path)
+	exe = full_installer_path
+      elsif ::File.exists?(full_installer_path(new_resource.name))
+	exe = full_installer_path(new_resource.name)
+      end
+      exe 
+    end 
   end
 end
 
