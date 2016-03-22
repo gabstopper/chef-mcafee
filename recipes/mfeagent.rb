@@ -7,12 +7,15 @@
 # All rights reserved - Do Not Redistribute
 #
 
-#include_recipe 'mcafee::default'
-
 case node['platform_family']
 when 'rhel', 'debian', 'suse'
   mcafee 'agent' do
-    workdir "/tmp"
+    workdir "tmp"
+    product_info ({
+	:package => 'agentPackages.zip',
+	:installer => 'install.sh',
+	:install_key => ['MFEcma']}
+    )
     action :install
   end
 when 'windows'
