@@ -26,6 +26,8 @@ class Chef
         converge_by('Removing package on Linux') do
           run_remove
         end
+      else
+        Chef::Log.info "Application '#{new_resource.name}' is not installed, cannot be removed"
       end
     end
    
@@ -45,6 +47,7 @@ class Chef
       target = new_resource.product_info[:install_key].first
       case node[:platform]
       when 'debian', 'ubuntu'
+        #shell_out("apt-cache search #{target}").stdout.empty?
 	cmd = shell_out ("dpkg -s #{target} | grep Status | awk '{print $NF}'")
 	cmd.stdout =~ /installed/	
       when 'redhat', 'amazon', 'centos', 'suse'
@@ -87,7 +90,6 @@ class Chef
 	end
       when 'dpc'
 	execute 'run_dpc_install' do
-	  #command "bash #{new_resource.workdir}/install.sh -i"
 	  command "bash #{full_installer_path} -i"
 	  cwd new_resource.workdir
 	  action :run
@@ -99,9 +101,10 @@ class Chef
       products = new_resource.product_info[:install_key]
       products.each do |product|
 	case node['platform_family']
-	when 'debian' #case sensitive on when running apt-cache on older ubuntu releases
+	when 'debian' #earlier versions of ubuntu apt-cache are case sensitive
 	  product = product.downcase
 	end
+	Chef::Log.info "Product is: #{product}"
 	package product do
 	  action :purge
 	end 

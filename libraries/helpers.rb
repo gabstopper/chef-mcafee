@@ -48,14 +48,14 @@ module McafeeCookbook
 
     #where the product info comes from
     def url_from_attribute
-      generate_download_url(node['mcafee']['url'])
+      cleanse_download_url(node['mcafee']['url'])
     end
 
     def url_from_recipe
-      generate_download_url(new_resource.url)
+      cleanse_download_url(new_resource.url)
     end
 
-    def generate_download_url(base_url)
+    def cleanse_download_url(base_url)
       base_url.gsub(/\/+$/, '') + "/" + new_resource.product_info[:package] 
     end
 
