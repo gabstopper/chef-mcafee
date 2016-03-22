@@ -29,8 +29,8 @@ See McAfee documentation for more information (www.mcafee.com)
  * `SUSE Linux Enterprise Server 12 SP1`
 
 ####Attributes
-######General Attributes
-`default.mcafee.url` : Default location for retrieving installation files
+######General Attribute
+`default[mcafee][url]` : Default location for retrieving installation files
 
 ######Package Info Attributes
 Each `name` property must have 3 associated attributes defined in order to identify where to find the product information.
