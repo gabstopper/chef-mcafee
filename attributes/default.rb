@@ -1,4 +1,4 @@
-default.mcafee.url = 'https://s3-us-west-2.amazonaws.com/mcafee-deploy/'
+default['mcafee']['url'] = 'https://s3-us-west-2.amazonaws.com/mcafee-deploy/'
 
 case node['platform_family']
   when 'rhel', 'debian', 'suse'
