@@ -49,9 +49,9 @@ For Windows based McAfee Agent, VSE and DPC:
  case node['platform_family']
  when 'windows'
  default['mcafee']['agent'] = {
-   'package' => 'agentPackages.zip',
-   'installer' => 'install.sh',
-   'install_key' => ['MFEcma', 'MFErt']
+   'package' => 'FramePkg.exe',
+   'installer' => 'FramePkg.exe',
+   'install_key' => ['McAfee Agent']
  }
  default['mcafee']['vse'] = {
    'package' => 'VSE880LMLRP7.Zip',
